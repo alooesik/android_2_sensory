@@ -29,7 +29,6 @@ fun ScreenLight(navController: NavController, sensorManager: SensorManager) {
             override fun onSensorChanged(event: SensorEvent) {
                 val newLightLevel = event.values.firstOrNull() ?: 0f
                 lightLevel = newLightLevel
-                // przeskalowanie wartości do zakresu 0-1, bez przeskalowania pasek za szybko się wypełnia
                 progress = newLightLevel.coerceIn(0f, maxLightLevel) / maxLightLevel
             }
 
