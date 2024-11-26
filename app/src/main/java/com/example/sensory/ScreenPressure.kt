@@ -21,7 +21,6 @@ fun ScreenPressure(navController: NavController, sensorManager: SensorManager) {
     var pressure by remember { mutableStateOf(0f) }
     var progress by remember { mutableStateOf(0f) }
 
-    val minPressure = 900f
     val maxPressure = 1100f
 
     DisposableEffect(Unit) {
@@ -29,7 +28,7 @@ fun ScreenPressure(navController: NavController, sensorManager: SensorManager) {
             override fun onSensorChanged(event: SensorEvent) {
                 val newPressure = event.values.firstOrNull() ?: 0f
                 pressure = newPressure
-                progress = ((newPressure - minPressure) / (maxPressure - minPressure)).coerceIn(0f, 1f)
+                progress = newPressure.coerceIn(0f, maxPressure) / maxPressure
             }
 
             override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
@@ -53,14 +52,8 @@ fun ScreenPressure(navController: NavController, sensorManager: SensorManager) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "Ciśnienie atmosferyczne\n",
-            fontSize = 20.sp
-        )
-        Text(
-            text = "${pressure.toInt()} hPa\n",
-            fontSize = 32.sp
-        )
+        Text(text = "Ciśnienie atmosferyczne\n", fontSize = 20.sp)
+        Text(text = "%.1f hPa".format(pressure), fontSize = 32.sp)
 
         ProgressIndicator(
             progress = progress,

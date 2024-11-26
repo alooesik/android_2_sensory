@@ -17,25 +17,37 @@ import androidx.navigation.NavController
 
 @Composable
 fun ScreenTemperature(navController: NavController, sensorManager: SensorManager) {
-    val temperatureSensor = sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)     // pobranie sensora temperatury otoczenia
+    val temperatureSensor =
+        sensorManager.getDefaultSensor(Sensor.TYPE_AMBIENT_TEMPERATURE)     // pobranie sensora temperatury otoczenia
     var temperature by remember { mutableStateOf(0f) }                                    // akutalna wartość temperatury
-    var progress by remember { mutableStateOf(0f) }                                       // aktualna wartość postępu w zakresie 0-1
+    var progress by remember { mutableStateOf(0f) }                                       // aktualna wartość postępu
 
     val minTemperature = -273.1f  // minimalna temperatura
     val maxTemperature = 100f     // maksymalna temperatura
 
     DisposableEffect(Unit) {                                              // uruchomienie i czyszczenie zasobów  w czasie życia Composable
-        val listener = object : SensorEventListener {                     // implementacja nasłuchiwania zdarzeń z sensora
+        val listener = object :
+            SensorEventListener {                     // implementacja nasłuchiwania zdarzeń z sensora
             override fun onSensorChanged(event: SensorEvent) {            // wywołanie nasłuchiwania z każdą nową wwartością
-                val newTemperature = event.values.firstOrNull() ?: 0f     // pobranie pierwszej wartości z tablicy (jeśli istnieje)
-                temperature = newTemperature                              // zapisanie nowej wartości
-                progress = ((newTemperature - minTemperature) / (maxTemperature - minTemperature)).coerceIn(0f, 1f)     // przeskalowanie temperatury do zakresu 0-1 (wskaźnik)
+                val newTemperature = event.values.firstOrNull()
+                    ?: 0f     // pobranie pierwszej wartości z tablicy (jeśli istnieje)
+                temperature =
+                    newTemperature                              // zapisanie nowej wartości
+                progress =
+                    ((newTemperature - minTemperature) / (maxTemperature - minTemperature)).coerceIn(
+                        0f,
+                        1f
+                    )     // przeskalowanie temperatury do zakresu 0-1 (wskaźnik)
             }
 
-            override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}       // wywoływane w przypadku zmiany dokłądnosci sensora
+            override fun onAccuracyChanged(
+                sensor: Sensor?,
+                accuracy: Int
+            ) {
+            }       // wywoływane w przypadku zmiany dokłądnosci sensora
         }
 
-        if (temperatureSensor != null) {               // sp[rawdzenie czy sensor jest dostępny
+        if (temperatureSensor != null) {               // sprawdzenie czy sensor jest dostępny
             sensorManager.registerListener(            // rejestracja sensora z normalną f_s
                 listener,
                 temperatureSensor,
@@ -54,7 +66,7 @@ fun ScreenTemperature(navController: NavController, sensorManager: SensorManager
         verticalArrangement = Arrangement.Center
     ) {
         Text(text = "Temperatura otoczenia\n", fontSize = 20.sp)
-        Text(text = "${temperature.toInt()} °C\n", fontSize = 32.sp)
+        Text(text = "%.1f °C".format(temperature), fontSize = 32.sp)
 
         ProgressIndicator(
             progress = progress,                            // ustawienie wartości progresu w zakresie 0-1

@@ -54,14 +54,8 @@ fun ScreenLight(navController: NavController, sensorManager: SensorManager) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Text(
-            text = "Natężenie światła\n",
-            fontSize = 20.sp
-        )
-        Text(
-            text = "${lightLevel.toInt()} lx\n",
-            fontSize = 32.sp
-        )
+        Text(text = "Natężenie światła\n", fontSize = 20.sp)
+        Text(text = "${lightLevel.toInt()} lx\n", fontSize = 32.sp)
 
         ProgressIndicator(
             progress = progress,
